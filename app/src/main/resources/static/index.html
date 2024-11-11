@@ -1,0 +1,56 @@
+<head>
+    <title>DoacoesMEV</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://disreputable-cadaver-4jqwg775x9wq2q4wr-8081.app.github.dev/design.css" type="text/css">
+</head>
+
+<body>
+    <h1>Gerenciamento de Doações</h1>
+    <p style="font-weight:bold" id="paragrafoMensagem"></p>
+		
+    <table id="tabelaDoacoes">  
+        <tr><td><input type="button" value="Novo" onclick="doacoes.html" id="btnNovo"></td> <td></td> <td></td></tr>
+        <tr> <th>ID</th> <th>Nome Doador</th> <th>Título</th> <th>Texto</th> </tr>
+        <tbody id="corpoTabelaDoacoes"> </tbody>
+    </table>
+    <script src="rest.js"></script>
+    <script>
+        const tabelaDoacoes = document.querySelector('#tabelaDoacoes');
+        const corpoTabela = document.querySelector('#corpoTabelaDoacoes');
+        const paragrafoMensagem = document.querySelector('#paragrafoMensagem');
+        inicializar();
+
+        function inicializar() {
+            paragrafoMensagem.textContent = 'Listagem de todas as Doações'
+            tabelaDoacoes.style.display = 'inline';
+            listarTodasDoacoes();            
+	    }
+        function listarTodasDoacoes() {
+            const errorHandler = function(error) { 
+                paragrafoMensagem.textContent = "Erro ao listar Doações (código " + error.message + ")";
+            }
+	        asyncLerDoacoes(preencherTabela, errorHandler);
+	    }
+        function preencherTabela(doacoes) {
+            corpoTabela.innerHTML = "";
+            var n = doacoes.length;
+            for (var i = 0; i < n; i++) {
+                let p = doacoes[i];
+                let linha = corpoTabela.insertRow();
+                let celulaId = linha.insertCell();
+                let celulaNomeDoador = linha.insertCell();
+                let celulaTitulo = linha.insertCell();
+                let celulaTexto = linha.insertCell();
+
+                
+                celulaId.textContent = p.id;
+                celulaNomeDoador.textContent = p.nomeDoador;
+                celulaTitulo.textContent = p.titulo;
+                celulaTexto.textContent = p.texto;
+
+            }
+        }
+
+    </script>
+</body>
+</html>
