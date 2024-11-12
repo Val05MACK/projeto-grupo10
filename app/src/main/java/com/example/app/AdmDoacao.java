@@ -13,19 +13,17 @@ public class AdmDoacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String nomeDoador;
-    private String titulo;
-    private String texto;
+    private String solicitanteDoacao;
+    private String descricao;
+    private double meta;
 
     public AdmDoacao() {}
-
-    public AdmDoacao(String nomeDoador, String titulo, String texto) {
-        this.nomeDoador = nomeDoador;
-        this.titulo = titulo;
-        this.texto = texto;
+    public AdmDoacao(String solicitanteDoacao, String descricao, double meta) {
+        this.solicitanteDoacao = solicitanteDoacao;
+        this.descricao = descricao;
+        this.meta = meta;
     }
 
-    // Getters e Setters
     public long getId() {
         return id;
     }
@@ -34,27 +32,29 @@ public class AdmDoacao {
         this.id = id;
     }
 
-    public String getNomeDoador() {
-        return nomeDoador;
+    public String getSolicitanteDoacao() {
+        return solicitanteDoacao;
     }
 
-    public void setNomeDoador(String nomeDoador) {
-        this.nomeDoador = nomeDoador;
+    public void setSolicitanteDoacao(String solicitanteDoacao) {
+        this.solicitanteDoacao = solicitanteDoacao;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
-    public String getTexto() {
-        return texto;
+    public double getMeta() {
+        return meta;
     }
 
-    public void setTexto(String texto) {
-        this.texto = texto;
+    public void setMeta(double meta) {
+        this.meta = meta;
     }
+
+    
 }

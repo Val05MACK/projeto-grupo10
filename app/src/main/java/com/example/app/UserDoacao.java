@@ -8,13 +8,13 @@ import jakarta.persistence.Table;
 @Table (name="UserDoacao")
 public class UserDoacao {
     @Id
-    private long cpf;
+    private long senha;
     private String nomeUser;
     private String emailUser;
     
    
-    public UserDoacao(long cpf, String nomeUser, String emailUser) {
-        this.cpf = cpf;
+    public UserDoacao(long senha, String nomeUser, String emailUser) {
+        this.senha=senha;
         this.nomeUser = nomeUser;
         this.emailUser = emailUser;
     }
@@ -31,10 +31,10 @@ public class UserDoacao {
         this.emailUser = emailUser;
     }
 
-    public long getCpf() {
-        return cpf;
+    public long getSenha() {
+        return senha;
     }
-    public void setCpf(long cpf) {
-        this.cpf = cpf;
+    public void setSenha(long senha) {
+        this.senha=senha;
     }
 }

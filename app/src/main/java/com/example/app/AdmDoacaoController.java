@@ -1,12 +1,14 @@
 package com.example.app;
 
 import java.util.Optional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @RequestMapping("/api/admDoacao")
+@CrossOrigin(origins = "http://localhost:8080")
 public class AdmDoacaoController {
 
     @Autowired
