@@ -1,46 +1,154 @@
-<html>
-
-    <head>
-    <title>DoacoesHome</title>
+<!DOCTYPE html>
+<head>
+    <title>AdminDoacoes</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://disreputable-cadaver-4jqwg775x9wq2q4wr-8081.app.github.dev/design.css" type="text/css">
-    </head>
-    <body>
-        <nav>
-            <a href="doacoes.html">Home</a>
-            <a href="index.html">Doações</a>
-            <a href="gerenciarDoacao.html">AdmPágina</a>
-        </nav>
-        <div id="divDoacoes">
-            <h1>Gerenciamento Doações</h1>
-            <p>Aqui estão as campanhas disponíveis:</p>
-            
-            <!-- Tabela de campanhas -->
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Título</th>
-                        <th>Descrição</th>
-                        <th>Meta (R$)</th>
-                        <th>Ação</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Ajude a Comunidade X</td>
-                        <td>Esta campanha busca arrecadar fundos para a construção de uma escola.</td>
-                        <td>50.000</td>
-                        <td><button type="button">Doar</button></td>
-                    </tr>
-                    <tr>
-                        <td>Assistência Médica Y</td>
-                        <td>Coleta de doações para comprar equipamentos médicos para um hospital local.</td>
-                        <td>100.000</td>
-                        <td><button type="button">Doar</button></td>
-                    </tr>
-                    <!-- Adicione outras campanhas conforme necessário -->
-                </tbody>
-            </table>
+    <link rel="stylesheet" href="gerenciarD.css" type="text/css">
+</head>
+
+<body>
+    <nav>
+        <a href="doacoes.html">Home</a>
+        <a href="index.html">Doações</a>
+        <a href="login.html">Acesso Administrativo</a>
+
+    </nav>
+    <div id="tableGerenciador">
+        <h1>Administrar Doações</h1>
+        <table id="tabelaGerenciadorDoacoes">
+            <tr>
+                <td>ID:</td>
+                <td><input type="text" id="txtId"></td>
+            </tr>
+            <tr>
+                <td>Solicitante:</td>
+                <td><input type="text" id="txtSolicitante"></td>
+            </tr>
+            <tr>
+                <td>Descrição:</td>
+                <td><input type="text" id="txtDescricao"></td>
+            </tr>
+            <tr>
+                <td>Meta:</td>
+                <td><input type="text" id="txtMeta"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="button" value="Salvar" onclick="salvarDoacao()" id="btnSalvar">
+                    <input type="button" value="Apagar" onclick="apagarDoacao()" id="btnApagar">
+                    <input type="button" value="Cancelar" onclick="cancelarDoacao()" id="btnCancelar">
+                </td>
+            </tr>
+        </table>
+        <h6>Altere e salve os dados da Campanha, ou então apague a Campanha</h6>
         </div>
-    </body>
+    <hr>
+    <!-- Listagem de campanhas -->
+    <div id="ctdListagem">
+        <h1>Visualizar Listagem de Campanhas</h1>
+        <table id="tabelaDoacoes">
+            <thead>
+                <td><input type="button" value="Nova Campanha" onclick="novaCampanha()" id="btnNovo"></td> 
+                <td></td>
+                <td></td>
+                <tr>
+                    <th>ID</th>
+                    <th>Solicitante</th>
+                    <th>Descrição</th>
+                    <th>Meta</th>
+                </tr>
+            </thead>
+            <tbody id="corpoTabelaDoacoes">
+                <!-- Dados das doações serão inseridos aqui via JS -->
+            </tbody>
+        </table>
+        <p id="paragrafoMensagem"></p>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="rest.js"></script>
+    <script>
+        
+        const tabelaDoacoes = document.querySelector('#tabelaDoacoes');
+        const corpoTabela = document.querySelector('#corpoTabelaDoacoes');
+        const paragrafoMensagem = document.querySelector('#paragrafoMensagem');
+        const txtDescricao = document.querySelector('#txtDescricao');
+        const txtSolicitante = document.querySelector('#txtSolicitante');
+        const txtMeta = document.querySelector('#txtMeta');
+        const txtId=document.querySelector('#txtId');
+
+        const btnApagar=document.querySelector('#btnApagar');
+        const btnCancelar= document.querySelector('#btnCancelar');
+        const btnSalvar=document.querySelector('#btnSalvar');
+        const btnNovo = document.querySelector('#btnNovo');
+        var criandoNovaCampanha=false;
+
+        inicializar();
+
+        function inicializar(){
+            criandoNovaCampanha=false;
+            paragrafoMensagem.textContent='Pressione o botão novo ou selecione uma Campanha da lista: '
+            txtId.value='';
+            txtSolicitante.value='';
+            txtDescricao.value='';
+            txtMeta.value='';
+
+
+            listarTodasCampanhas();
+        }
+        function listarTodasCampanhas(){
+            const errorHandler= function(error){
+             paragrafoMensagem.textContent="Erro ao listar campanhas (código"+error.message+")";
+            }
+            asyncLerDoacoes(preencherTabela,errorHandler);
+        }
+        function preencherTabela(doacoes){
+            corpoTabela.innerHTML = "";
+            var n = doacoes.length;
+            for (var i = 0; i < n; i++) {
+                let p = doacoes[i];
+                let linha = corpoTabela.insertRow();
+                
+                // Inserir células de dados
+                let celulaId = linha.insertCell();
+                let celulaSolicitante = linha.insertCell();
+                let celulaDescricao = linha.insertCell();
+                let celulaMeta = linha.insertCell();
+
+                let alink=document.createElement('a');
+                alink.textContent=p.id;
+                alink.href="javascript:void(0)";
+                alink.onclik= function(){selecionarDoacao(p.id);};
+                celulaId.appendChild(alink);
+                celulaSolicitante.textContent=p.solicitanteDoacao;
+                celulaDescricao.textContent=p.descricao;
+                celulaMeta.textContent=p.meta;
+                
+        }
+    }
+    async function salvarDoacao() { // Adicione 'async' na declaração da função
+        try {
+            const response = await fetch('/api/admDoacao', {
+                method: 'POST',
+                body: JSON.stringify({
+                    id: document.querySelector('#txtId').value,
+                    solicitanteDoacao: document.querySelector('#txtSolicitante').value,
+                    descricao: document.querySelector('#txtDescricao').value,
+                    meta: document.querySelector('#txtMeta').value
+                })
+            });
+
+            if (response.ok) {
+                alert('Doação salva com sucesso!');
+            } else {
+                console.error('Erro:', response.status, response.statusText);
+                alert('Erro ao salvar a doação.');
+            }
+        } catch (error) {
+            console.error('Erro na requisição:', error);
+        }
+    }
+        </script>
+       </body>
 </html>
